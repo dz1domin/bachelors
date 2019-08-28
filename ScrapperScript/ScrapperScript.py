@@ -2,6 +2,7 @@
 
 import requests
 import urllib.parse
+import os
 
 # example version if one wants to manually pass API response for downloading images
 # with open('exampleSearchQuery.json', 'r') as file:
@@ -35,7 +36,11 @@ def download(apiKey, query, pageNum, k):
         imgURI = imgURI.lower()
         print(imgURI)
         res = requests.get(imgURI)
-        outFile = open('../Images/img_' + str(k) + '.jpg', 'wb')
+        outFileName = '../Images/img_' + str(k) + '.jpg'
+        while os.path.isfile(outFileName):
+            k += 1
+            outFileName = '../Images/img_' + str(k) + '.jpg'
+        outFile = open(outFileName, 'wb')
         outFile.write(res.content)
         k += 1
         res.close()
