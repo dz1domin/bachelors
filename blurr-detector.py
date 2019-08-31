@@ -20,6 +20,7 @@ def main():
     machine_learning.add_argument('-ml', '--machine-learning', help='Applies machine learning model to detect blurred images.')
 
     options = parser.parse_args()
+    print(options)
 
 
 if __name__ == "__main__":
