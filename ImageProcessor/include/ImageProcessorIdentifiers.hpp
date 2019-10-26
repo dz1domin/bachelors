@@ -1,0 +1,14 @@
+#ifndef __IMAGE_PROCESSOR_INDENTIFIER_HPP__
+#define __IMAGE_PROCESSOR_INDENTIFIER_HPP__
+
+enum
+{
+    ANALYTICAL_ID = 0,
+    ML_ID = 1,
+    INVALID_ID = 0xFFFFFFFF
+    
+};
+
+
+
+#endif
