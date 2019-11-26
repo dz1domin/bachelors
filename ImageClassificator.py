@@ -4,11 +4,9 @@
 # Version - Author - Change
 # v1        Dominik   Initial version
 import argparse
-import pkgutil
 from importlib import import_module
-from pathlib import Path
-import os
 import json
+from ModuleRunner import ModuleRunner
 
 
 def dynamic_load(moduleInfo):
@@ -31,11 +29,14 @@ def main():
 
     options = parser.parse_args()
     optionsDict = vars(options)
-    module = None
-    for el in moduleDefinitions:
-        if el['name'] == optionsDict['which']:
-            module = dynamic_load(el)
-            break
+    if not optionsDict:
+        pass
+        # brak opcji, jak będzie trzeba bedzie tutaj gui uruchamiane
+    else:
+        for module in moduleDefinitions:
+            if module['name'] == optionsDict['which']:
+                ModuleRunner.run(optionsDict, module)
+                break
 
 
 if __name__ == "__main__":
