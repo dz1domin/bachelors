@@ -9,10 +9,6 @@ import json
 from ModuleRunner import ModuleRunner
 
 
-def dynamic_load(moduleInfo):
-    return import_module(moduleInfo['info']['path'])
-
-
 def main():
     parser = argparse.ArgumentParser(description='This is a program for classifying images and verifying different methods of doing so.')
 
