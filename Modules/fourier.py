@@ -13,4 +13,4 @@ def fourier(img_path, options):
     fft_inverse_shift = np.fft.ifftshift(fft_shifted)
     fft_inverse = np.fft.ifft2(fft_inverse_shift)
     fft_inverse = 20 * np.log(np.abs(fft_inverse))
-    return img_path, np.mean(fft_inverse) < float(options['thresh'])
+    return img_path, str(np.mean(fft_inverse) < float(options['thresh']))
