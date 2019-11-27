@@ -22,21 +22,20 @@ def main():
     with open('moduleDefinitions.json') as moduleDefinitionsFile:
         moduleDefinitions = json.load(moduleDefinitionsFile)
 
-    subparsers = parser.add_subparsers()
+    subparsers = parser.add_subparsers(dest = "moduleName", required=True)
     for (moduleName, moduleInfo) in moduleDefinitions.items():
         sub = subparsers.add_parser(moduleName, help=moduleInfo['info']['help'])
         for arg in moduleInfo['info']['options']:
-            sub.add_argument(arg['option'], help=arg['help'])
-        sub.set_defaults(which=moduleName)
+            sub.add_argument(arg['option'], required=True, help=arg['help'])
 
     options = parser.parse_args()
     optionsDict = vars(options)
+
     if not optionsDict:
         pass
         # brak opcji, jak będzie trzeba bedzie tutaj gui uruchamiane
     else:
-        if optionsDict['which'] in moduleDefinitions:
-            ModuleRunner.run(optionsDict, moduleDefinitions[optionsDict['which']])
+        ModuleRunner.run(optionsDict, moduleDefinitions[optionsDict['moduleName']])
 
 
 if __name__ == "__main__":
