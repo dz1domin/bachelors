@@ -26,7 +26,9 @@ def main():
     for (moduleName, moduleInfo) in moduleDefinitions.items():
         sub = subparsers.add_parser(moduleName, help=moduleInfo['info']['help'])
         for arg in moduleInfo['info']['options']:
-            sub.add_argument(arg['option'], required=True, help=arg['help'])
+            optionName = arg['option']
+            del arg['option']
+            sub.add_argument(optionName, **arg)
 
     options = parser.parse_args()
     optionsDict = vars(options)
