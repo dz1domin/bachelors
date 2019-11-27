@@ -4,13 +4,19 @@
 # Version - Author - Change
 # v1        Dominik   Initial version
 import argparse
-from importlib import import_module
 import json
 from ModuleRunner import ModuleRunner
 
 
 def main():
     parser = argparse.ArgumentParser(description='This is a program for classifying images and verifying different methods of doing so.')
+
+    parser.add_argument('-p', '--path', help='This defines the path to the images.', default='.', type=str)
+    parser.add_argument('-r', '--recursive',
+                        help='This defines if image search is limited to directory passed in the path variable.',
+                        default=False, action='store_true')
+    parser.add_argument('-v', '--validation', help='This variable can contain path to supported file to validate module output.',
+                        default=None, type=str)
 
     moduleDefinitions = None
     with open('moduleDefinitions.json') as moduleDefinitionsFile:
