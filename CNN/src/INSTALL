@@ -1,0 +1,4 @@
+Required libs:
+static compiled boost
+opencv with shared libs
+libtorch with shared libs
