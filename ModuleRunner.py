@@ -6,11 +6,12 @@ from pathlib import Path
 class ModuleRunner:
     @staticmethod
     def run(runtimeOptions, moduleDefinition):
-        module, method = load_module_and_method(moduleDefinition['info']['path'], moduleDefinition['methodToCall'])
+        _, method = load_module_and_method(moduleDefinition['info']['path'], moduleDefinition['methodToCall'])
         images = get_image_paths(runtimeOptions['path'], runtimeOptions['recursive'])
         for gen in images:
             for image in gen:
-                result = method(image, runtimeOptions)
+                #str(image) is required for multiplatform, because it was detected as "WindowsPath" on windows, and then there was a type conflict :^)
+                result = method(str(image), runtimeOptions)
                 print(result)
 
 
