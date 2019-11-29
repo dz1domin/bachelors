@@ -3,7 +3,7 @@ import xml.etree.ElementTree as ET
 
 
 
-def _detectFileExtensionAndGetDataAsDict(input):
+def _detect_file_extension_and_get_data_as_dict(input):
     extension = ''.join(input).split('.')[-1]
 
     if extension == "xlsx":
@@ -28,7 +28,7 @@ def _detectFileExtensionAndGetDataAsDict(input):
         print("Not supported file format")
         return None, None
 
-def _saveResultOfValidationToFile(results, extension):
+def _save_result_of_validation_to_file(results, extension):
 
     if extension == "xlsx":
         results = pd.DataFrame(results, columns = ["image", "label", "classification"])
@@ -50,7 +50,7 @@ def _saveResultOfValidationToFile(results, extension):
         assert("This shouldn't be executed")
 
 def validate(filePath, method, methodOptions):
-    extension, data = _detectFileExtensionAndGetDataAsDict(filePath)
+    extension, data = _detect_file_extension_and_get_data_as_dict(filePath)
     if extension is not None and data is not None:
         validationResult = []
         validClassifications = 0
@@ -64,6 +64,6 @@ def validate(filePath, method, methodOptions):
             if result == int(label):
                 validClassifications += 1
         
-        _saveResultOfValidationToFile(validationResult, extension)
+        _save_result_of_validation_to_file(validationResult, extension)
         print("Accuracy of model: {}%".format((validClassifications / len(data)) * 100))
     
