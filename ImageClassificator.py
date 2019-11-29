@@ -17,6 +17,8 @@ def main():
                         default=False, action='store_true')
     parser.add_argument('-v', '--validation', help='This variable can contain path to supported file to validate module output.',
                         default=None, type=str)
+    parser.add_argument('-z', '--validator', help="This cariable can contain path to validating module.",
+                        default=None, type=str)
 
     moduleDefinitions = None
     with open('moduleDefinitions.json') as moduleDefinitionsFile:

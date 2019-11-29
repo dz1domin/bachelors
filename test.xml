@@ -1,0 +1,11 @@
+<images>
+    <image>
+        <path>test.jpg</path>
+        <label>1</label>
+    </image>
+    <image>
+        <path>test.jpg</path>
+        <label>1</label>
+    </image>
+
+</images>

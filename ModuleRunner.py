@@ -7,12 +7,18 @@ class ModuleRunner:
     @staticmethod
     def run(runtimeOptions, moduleDefinition):
         _, method = load_module_and_method(moduleDefinition['info']['path'], moduleDefinition['methodToCall'])
-        images = get_image_paths(runtimeOptions['path'], runtimeOptions['recursive'])
-        for gen in images:
-            for image in gen:
-                #str(image) is required for multiplatform, because it was detected as "WindowsPath" on windows, and then there was a type conflict :^)
-                result = method(str(image), runtimeOptions)
-                print(result)
+
+        if runtimeOptions['validation'] is not None:
+            if runtimeOptions['validator'] is not None:
+                validator =  import_module(runtimeOptions['validator'])
+                validator.validate(runtimeOptions['validation'], method, runtimeOptions)
+        else:
+            images = get_image_paths(runtimeOptions['path'], runtimeOptions['recursive'])
+            for gen in images:
+                for image in gen:
+                    #str(image) is required for multiplatform, because it was detected as "WindowsPath" on windows, and then there was a type conflict :^)
+                    result = method(str(image), runtimeOptions)
+                    print(result)
 
 
 def load_module_and_method(modulePath, methodToCall):
