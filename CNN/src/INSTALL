@@ -4,5 +4,10 @@ Open cnn.sln
 update your library paths
 compile only x64
 
+Required .dll:
+opencv_world412.dll (opencv)
+torch.dll (libtorch)
+c10.dll (libtorch)
+
 Linux:
 TODO
