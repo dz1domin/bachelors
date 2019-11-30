@@ -8,7 +8,6 @@
  * ***********************************
 **/
 
-#define BOOST_PYTHON_STATIC_LIB
 
 #include "ModelConfig.hpp"
 #include <exception>

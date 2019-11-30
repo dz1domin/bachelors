@@ -1,4 +1,8 @@
-Required libs:
-static compiled boost
-opencv with shared libs
-libtorch with shared libs
+Windows:
+
+Open cnn.sln
+update your library paths
+compile only x64
+
+Linux:
+TODO

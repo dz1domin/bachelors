@@ -10,8 +10,6 @@
 
 
 
-//very important define which allows us to link statically python part of boost lib
-#define BOOST_PYTHON_STATIC_LIB
 
 #include <boost/python.hpp>
 #include <iostream>

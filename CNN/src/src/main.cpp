@@ -31,11 +31,7 @@ int main(int argc, char* argv[])
 {
 
 
-	BlurDetector::ModelConfig config;
-	BlurDetector::CNNBlurDetector blurDetector(modelConfig);
-
-	auto result = blurDetector.classify();
-	std::cout << result << std::endl;
+	std::cout << "You can test module here" << std::endl;
 
 
 
