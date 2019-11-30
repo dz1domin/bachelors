@@ -10,4 +10,15 @@ torch.dll (libtorch)
 c10.dll (libtorch)
 
 Linux:
-TODO
+Required:
+python 3.7
+boost
+opencv
+libtorch
+
+remember to change HINTS in CMakeLists.txt
+
+you have to also remember about retarded include paths in libtorch, it's is required to create symbolic links to api
+you cannot copy them because it will raise error => "redefinition"
+also important thing is that you have to use python3, in other way there will be linking problems
+paths to dynamic libs have to be set(!)
