@@ -1,0 +1,15 @@
+{
+  "name": "fourier",
+  "methodToCall": "fourier",
+  "info": {
+    "path": "Modules.fourier.fourier",
+    "options": [
+      {
+        "option": "-thresh",
+        "help": "Determines threshold to accept image as clear.",
+        "required": "true"
+      }
+    ],
+    "help": "This module uses Fourier Transform to calculate mean value of log of absolute value of high frequencies in image to determine whether it's blurred or not."
+  }
+}

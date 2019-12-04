@@ -7,8 +7,9 @@ import argparse
 import json
 from ModuleRunner import ModuleRunner
 import jsonschema
+from pathlib import Path
 
-
+# TODO: fix this schema for current project logic
 schema_string = """
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
@@ -61,17 +62,15 @@ def main():
                         default=None, type=str)
 
     # loading module definitions
-    moduleDefinitions = None
-    with open('moduleDefinitions.json') as moduleDefinitionsFile:
-        moduleDefinitions = json.load(moduleDefinitionsFile)
+    moduleDefinitions = load_module_definitions()
 
     # validating loaded module definitions to fit schema
-    jsonschema.validate(moduleDefinitions, json.loads(schema_string))
+    # jsonschema.validate(moduleDefinitions, json.loads(schema_string))
 
-    subparsers = parser.add_subparsers(dest = "moduleName", required=True)
-    for (moduleName, moduleInfo) in moduleDefinitions.items():
-        sub = subparsers.add_parser(moduleName, help=moduleInfo['info']['help'])
-        for arg in moduleInfo['info']['options']:
+    subparsers = parser.add_subparsers(dest='moduleName', required=True)
+    for definition in moduleDefinitions:
+        sub = subparsers.add_parser(definition['name'], help=definition['info']['help'])
+        for arg in definition['info']['options']:
             optionName = arg['option']
             del arg['option']
             sub.add_argument(optionName, **arg)
@@ -81,9 +80,26 @@ def main():
 
     if not optionsDict:
         pass
-        # no options, gui might be launched from here in the future
+        # no options, load preconfigured json file with options
     else:
-        ModuleRunner.run(optionsDict, moduleDefinitions[optionsDict['moduleName']])
+        for definition in moduleDefinitions:
+            if definition['name'] == optionsDict['moduleName']:
+                ModuleRunner.run(optionsDict, definition)
+                break
+
+
+def load_global_config():
+    pass
+
+
+def load_module_definitions():
+    result = []
+    moduleDefinitionPathGen = Path('./Modules').glob('*/moduleDefinition.json')
+    for p in moduleDefinitionPathGen:
+        with open(p, 'r') as file:
+            definition = json.load(file)
+        result.append(definition)
+    return result
 
 
 if __name__ == "__main__":
