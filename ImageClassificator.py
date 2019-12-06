@@ -52,14 +52,16 @@ def main():
     # options for overall program
     parser = argparse.ArgumentParser(description='This is a program for classifying images and verifying different methods of doing so.')
 
-    parser.add_argument('-p', '--path', help='This defines the path to the images.', default='.', type=str)
+    parser.add_argument('-p', '--path', help='This defines the path to the images.', type=str)
     parser.add_argument('-r', '--recursive',
                         help='This defines if image search is limited to directory passed in the path variable.',
-                        default=False, action='store_true')
+                        action='store_true')
     parser.add_argument('-v', '--validation', help='This variable can contain path to supported file to validate module output.',
-                        default=None, type=str)
-    parser.add_argument('-z', '--validator', help="This cariable can contain path to validating module.",
-                        default=None, type=str)
+                        type=str)
+    parser.add_argument('-z', '--validator', help="This variable can contain path to validating module.",
+                        type=str)
+    parser.add_argument('-a', '--action', help="This variable specifies what action to take when image has received its classification.",
+                        type=str)
 
     # loading module definitions
     moduleDefinitions = load_module_definitions()
@@ -67,7 +69,7 @@ def main():
     # validating loaded module definitions to fit schema
     # jsonschema.validate(moduleDefinitions, json.loads(schema_string))
 
-    subparsers = parser.add_subparsers(dest='moduleName', required=True)
+    subparsers = parser.add_subparsers(dest='moduleName')
     for definition in moduleDefinitions:
         sub = subparsers.add_parser(definition['name'], help=definition['info']['help'])
         for arg in definition['info']['options']:
@@ -77,19 +79,23 @@ def main():
 
     options = parser.parse_args()
     optionsDict = vars(options)
+    defaultConfig = load_global_config()
 
-    if not optionsDict:
-        pass
-        # no options, load preconfigured json file with options
-    else:
-        for definition in moduleDefinitions:
-            if definition['name'] == optionsDict['moduleName']:
-                ModuleRunner.run(optionsDict, definition)
-                break
+    for key, val in defaultConfig.items():
+        if not key in optionsDict or not optionsDict[key]:
+            optionsDict[key] = defaultConfig[key]
+
+    for definition in moduleDefinitions:
+        if definition['name'] == optionsDict['moduleName']:
+            ModuleRunner.run(optionsDict, definition)
+            break
 
 
 def load_global_config():
-    pass
+    result = None
+    with open('defaultConfig.json', 'r') as file:
+         result = json.load(file)
+    return result
 
 
 def load_module_definitions():

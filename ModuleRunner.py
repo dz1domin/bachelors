@@ -6,6 +6,7 @@ from pathlib import Path
 class ModuleRunner:
     @staticmethod
     def run(runtimeOptions, moduleDefinition):
+        print(runtimeOptions)
         _, method = load_module_and_method(moduleDefinition['info']['path'], moduleDefinition['methodToCall'])
 
         if runtimeOptions['validation'] is not None:

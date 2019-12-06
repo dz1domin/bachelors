@@ -1,0 +1,8 @@
+{
+  "path": "./Images",
+  "recursive": false,
+  "validation": null,
+  "validator": null,
+  "moduleName": "laplace",
+  "thresh": 100.0
+}
