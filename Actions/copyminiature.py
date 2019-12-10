@@ -1,9 +1,9 @@
 from Actions.actioninterface import ActionInterface
-from shutil import copy2
 import os
 
+#TODO:figure out how to get image's thumbnail to save to a dir
 
-class Copy(ActionInterface):
+class CopyMiniature(ActionInterface):
     def setup(self, runtimeOptions):
         if not os.path.isdir(runtimeOptions['actionOut']):
             os.mkdir(runtimeOptions['actionOut'])
@@ -12,4 +12,4 @@ class Copy(ActionInterface):
         if not os.path.isdir(runtimeOptions['actionOut'] + '/' + moduleResult[1]):
             os.mkdir(runtimeOptions['actionOut'] + '/' + moduleResult[1])
 
-        copy2(moduleResult[0], runtimeOptions['actionOut'] + '/' + moduleResult[1])
+        # copy2(moduleResult[0], runtimeOptions['actionOut'] + '/' + moduleResult[1])

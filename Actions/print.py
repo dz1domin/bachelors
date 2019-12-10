@@ -1,7 +1,6 @@
-from Actions.action_interface import ActionInterface
+from Actions.actioninterface import ActionInterface
 
 
 class Print(ActionInterface):
-    @staticmethod
-    def do_action(moduleResult, runtimeOptions):
-        pass
+    def do_action(self, moduleResult, runtimeOptions):
+        print(moduleResult)
