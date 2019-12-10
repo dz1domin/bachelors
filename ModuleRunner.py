@@ -26,7 +26,11 @@ class ModuleRunner:
 
 
 def load_module_and_method(modulePath, methodToCall):
-    module = import_module(modulePath)
+    module = None
+    try:
+        module = import_module(modulePath)
+    except ModuleNotFoundError:
+        exit(-1)
     method = getattr(module, methodToCall)
     return module, method
 
@@ -50,7 +54,11 @@ def get_image_paths(path, isRecursive):
 
 
 def load_action(runtimeOptions):
-    module = import_module('Actions.{}'.format(runtimeOptions['action']))
+    module = None
+    try:
+        module = import_module('Actions.{}'.format(runtimeOptions['action']))
+    except ModuleNotFoundError:
+        exit(-1)
     action_class = None
     for el in inspect.getmembers(module, inspect.isclass):
         if el[0].casefold() == runtimeOptions['action']:

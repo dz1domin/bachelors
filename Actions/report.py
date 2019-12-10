@@ -3,19 +3,22 @@ import json
 
 
 class Report(ActionInterface):
-    def setup(self, runtimeOptions):
+    def __init__(self):
         self.collection = []
-        self.clasifications = {}
+        self.classifications = {}
+        self.outFile = ""
+
+    def setup(self, runtimeOptions):
         self.outFile = runtimeOptions['actionOut'] + '/report.json'
 
     def do_action(self, moduleResult, runtimeOptions):
         self.collection.append(moduleResult)
-        if moduleResult[1] not in self.clasifications:
-            self.clasifications[moduleResult[1]] = 1
+        if moduleResult[1] not in self.classifications:
+            self.classifications[moduleResult[1]] = 1
         else:
-            self.clasifications[moduleResult[1]] += 1
+            self.classifications[moduleResult[1]] += 1
 
     def finish(self):
-        self.collection.append(self.clasifications)
+        self.collection.append(self.classifications)
         with open(self.outFile, 'w') as file:
             json.dump(self.collection, file)

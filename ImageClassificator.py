@@ -62,6 +62,9 @@ def main():
                         type=str)
     parser.add_argument('-a', '--action', help="This variable specifies what action to take when image has received its classification.",
                         type=str)
+    parser.add_argument('-ao', '--actionOut',
+                        help="This variable specifies path at which output from chosen action will be saved.",
+                        type=str)
 
     # loading module definitions
     moduleDefinitions = load_module_definitions()
