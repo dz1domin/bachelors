@@ -22,7 +22,7 @@ class ModuleRunner:
                     result = method(str(image), runtimeOptions)
                     action_obj.do_action(result, runtimeOptions)
 
-        action_obj.finish()
+        action_obj.finish(runtimeOptions)
 
 
 def load_module_and_method(modulePath, methodToCall):

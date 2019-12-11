@@ -18,7 +18,7 @@ class Report(ActionInterface):
         else:
             self.classifications[moduleResult[1]] += 1
 
-    def finish(self):
+    def finish(self, runtimeOptions):
         self.collection.append(self.classifications)
         with open(self.outFile, 'w') as file:
             json.dump(self.collection, file)
