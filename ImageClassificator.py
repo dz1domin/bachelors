@@ -5,7 +5,7 @@
 # v1        Dominik   Initial version
 import argparse
 import json
-from ModuleRunner import ModuleRunner
+from ModuleRunner import Runner
 import jsonschema
 from pathlib import Path
 
@@ -62,7 +62,7 @@ def main():
                         type=str)
     parser.add_argument('-a', '--action', help="This variable specifies what action to take when image has received its classification.",
                         type=str)
-    parser.add_argument('-ao', '--actionOut',
+    parser.add_argument('-o', '--actionOut',
                         help="This variable specifies path at which output from chosen action will be saved.",
                         type=str)
 
@@ -84,14 +84,17 @@ def main():
     optionsDict = vars(options)
     defaultConfig = load_global_config()
 
-    for key, val in defaultConfig.items():
+    for key in defaultConfig.keys():
         if not key in optionsDict or not optionsDict[key]:
             optionsDict[key] = defaultConfig[key]
 
     for definition in moduleDefinitions:
         if definition['name'] == optionsDict['moduleName']:
-            ModuleRunner.run(optionsDict, definition)
-            break
+            classificationResult = Runner.runModule(optionsDict, definition)
+            
+    if should_run_validation(optionsDict):
+        Runner.runValidator(optionsDict, classificationResult)
+
 
 
 def load_global_config():
@@ -109,6 +112,10 @@ def load_module_definitions():
             definition = json.load(file)
         result.append(definition)
     return result
+
+def should_run_validation(options):
+    return options['validator'] is not None and options['validation'] is not None
+
 
 
 if __name__ == "__main__":
