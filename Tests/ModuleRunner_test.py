@@ -8,10 +8,10 @@ import ModuleRunner as mr
 
 
 def test_load_module_and_method():
-    module, method = mr.load_module_and_method('TestModule', 'test_method')
+    module, method = mr.load_module_and_method('Module', 'method')
     inspected = inspect.getmembers(module, inspect.isfunction)
     assert method('', {}) == ('', 'test')
-    assert inspected[0][0] == 'test_method'
+    assert inspected[0][0] == 'method'
 
 
 def test_get_image_paths():
