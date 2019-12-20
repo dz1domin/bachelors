@@ -5,6 +5,7 @@ import inspect
 base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(base_path)
 import ModuleRunner as mr
+from Actions.actioninterface import ActionInterface
 
 
 def test_load_module_and_method():
@@ -15,12 +16,14 @@ def test_load_module_and_method():
 
 
 def test_get_image_paths():
-    # nie wiem jak by to przetestowac xd
-    pass
+    paths = mr.get_image_paths('./TestImage', False, ['*.jpg'])
+    for el in paths:
+        assert os.path.isfile(el)
 
 
 def test_load_action():
-    pass
+    action_obj = mr.load_action('copy')
+    assert isinstance(action_obj, ActionInterface)
 
 
 def test_load_validator():
