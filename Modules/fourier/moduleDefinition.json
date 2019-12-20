@@ -3,6 +3,7 @@
   "methodToCall": "fourier",
   "info": {
     "path": "Modules.fourier.fourier",
+    "formats": ["*.bmp", "*.pbm", "*.pgm", "*.ppm", "*.sr", "*.ras", "*.jpeg", "*.jpg", "*.jpe", "*.jp2", "*.tiff", "*.tif", "*.png"],
     "options": [
       {
         "option": "-thresh",

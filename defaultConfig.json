@@ -4,7 +4,6 @@
   "validation": null,
   "validator": null,
   "moduleName": "laplace",
-  "thresh": 100.0,
   "action": "print",
   "actionOut": "./Output"
 }

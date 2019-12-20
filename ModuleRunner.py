@@ -11,7 +11,7 @@ class Runner:
         action_obj.setup(runtimeOptions)
         _, method = load_module_and_method(moduleDefinition['info']['path'], moduleDefinition['methodToCall'])
 
-        images = get_image_paths(runtimeOptions['path'], runtimeOptions['recursive'])
+        images = get_image_paths(runtimeOptions['path'], runtimeOptions['recursive'], moduleDefinition['info']['formats'])
         all_results = []
         for gen in images:
             for image in gen:
@@ -39,8 +39,7 @@ def load_module_and_method(modulePath, methodToCall):
     return module, method
 
 
-def get_image_paths(path, isRecursive):
-    formatPatterns = ['*.bmp', '*.pbm', '*.pgm', '*.ppm', '*.sr', '*.ras', '*.jpeg', '*.jpg', '*.jpe', '*.jp2', '*.tiff', '*.tif', '*.png']
+def get_image_paths(path, isRecursive, formatPatterns = []):
     result = None
     if isRecursive:
         for pattern in formatPatterns:
@@ -69,6 +68,7 @@ def load_action(action):
             action_class = getattr(module, el[0])
             return action_class()
     return None
+
 
 def load_validator(validator):
     try:

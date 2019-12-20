@@ -3,6 +3,7 @@
   "methodToCall": "cnn",
   "info": {
     "path": "Modules.cnn.cnn",
+    "formats": ["*.bmp", "*.pbm", "*.pgm", "*.ppm", "*.sr", "*.ras", "*.jpeg", "*.jpg", "*.jpe", "*.jp2", "*.tiff", "*.tif", "*.png"],
     "options": [
       {
         "option": "-modelPath",
