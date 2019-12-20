@@ -5,10 +5,11 @@
 # v1        Dominik   Initial version
 import argparse
 import json
-from ModuleRunner import ModuleRunner
+from ModuleRunner import Runner
 import jsonschema
+from pathlib import Path
 
-
+# TODO: fix this schema for current project logic
 schema_string = """
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
@@ -51,39 +52,70 @@ def main():
     # options for overall program
     parser = argparse.ArgumentParser(description='This is a program for classifying images and verifying different methods of doing so.')
 
-    parser.add_argument('-p', '--path', help='This defines the path to the images.', default='.', type=str)
+    parser.add_argument('-p', '--path', help='This defines the path to the images.', type=str)
     parser.add_argument('-r', '--recursive',
                         help='This defines if image search is limited to directory passed in the path variable.',
-                        default=False, action='store_true')
+                        action='store_true')
     parser.add_argument('-v', '--validation', help='This variable can contain path to supported file to validate module output.',
-                        default=None, type=str)
-    parser.add_argument('-z', '--validator', help="This cariable can contain path to validating module.",
-                        default=None, type=str)
+                        type=str)
+    parser.add_argument('-z', '--validator', help="This variable can contain path to validating module.",
+                        type=str)
+    parser.add_argument('-a', '--action', help="This variable specifies what action to take when image has received its classification.",
+                        type=str)
+    parser.add_argument('-o', '--actionOut',
+                        help="This variable specifies path at which output from chosen action will be saved.",
+                        type=str)
 
     # loading module definitions
-    moduleDefinitions = None
-    with open('moduleDefinitions.json') as moduleDefinitionsFile:
-        moduleDefinitions = json.load(moduleDefinitionsFile)
+    moduleDefinitions = load_module_definitions()
 
     # validating loaded module definitions to fit schema
-    jsonschema.validate(moduleDefinitions, json.loads(schema_string))
+    # jsonschema.validate(moduleDefinitions, json.loads(schema_string))
 
-    subparsers = parser.add_subparsers(dest = "moduleName", required=True)
-    for (moduleName, moduleInfo) in moduleDefinitions.items():
-        sub = subparsers.add_parser(moduleName, help=moduleInfo['info']['help'])
-        for arg in moduleInfo['info']['options']:
+    subparsers = parser.add_subparsers(dest='moduleName')
+    for definition in moduleDefinitions:
+        sub = subparsers.add_parser(definition['name'], help=definition['info']['help'])
+        for arg in definition['info']['options']:
             optionName = arg['option']
             del arg['option']
             sub.add_argument(optionName, **arg)
 
     options = parser.parse_args()
     optionsDict = vars(options)
+    defaultConfig = load_global_config()
 
-    if not optionsDict:
-        pass
-        # no options, gui might be launched from here in the future
-    else:
-        ModuleRunner.run(optionsDict, moduleDefinitions[optionsDict['moduleName']])
+    for key in defaultConfig.keys():
+        if not key in optionsDict or not optionsDict[key]:
+            optionsDict[key] = defaultConfig[key]
+
+    for definition in moduleDefinitions:
+        if definition['name'] == optionsDict['moduleName']:
+            classificationResult = Runner.runModule(optionsDict, definition)
+            
+    if should_run_validation(optionsDict):
+        Runner.runValidator(optionsDict, classificationResult)
+
+
+
+def load_global_config():
+    result = None
+    with open('defaultConfig.json', 'r') as file:
+         result = json.load(file)
+    return result
+
+
+def load_module_definitions():
+    result = []
+    moduleDefinitionPathGen = Path('./Modules').glob('*/moduleDefinition.json')
+    for p in moduleDefinitionPathGen:
+        with open(p, 'r') as file:
+            definition = json.load(file)
+        result.append(definition)
+    return result
+
+def should_run_validation(options):
+    return options['validator'] is not None and options['validation'] is not None
+
 
 
 if __name__ == "__main__":

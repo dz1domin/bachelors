@@ -1,28 +1,40 @@
 from importlib import import_module
-import glob
+import inspect
 from pathlib import Path
+from Validators.Validator import Validator
 
 
-class ModuleRunner:
+class Runner:
     @staticmethod
-    def run(runtimeOptions, moduleDefinition):
+    def runModule(runtimeOptions, moduleDefinition):
+        action_obj = load_action(runtimeOptions['action'])
+        action_obj.setup(runtimeOptions)
         _, method = load_module_and_method(moduleDefinition['info']['path'], moduleDefinition['methodToCall'])
 
-        if runtimeOptions['validation'] is not None:
-            if runtimeOptions['validator'] is not None:
-                validator =  import_module(runtimeOptions['validator'])
-                validator.validate(runtimeOptions['validation'], method, runtimeOptions)
-        else:
-            images = get_image_paths(runtimeOptions['path'], runtimeOptions['recursive'])
-            for gen in images:
-                for image in gen:
-                    #str(image) is required for multiplatform, because it was detected as "WindowsPath" on windows, and then there was a type conflict :^)
-                    result = method(str(image), runtimeOptions)
-                    print(result)
+        images = get_image_paths(runtimeOptions['path'], runtimeOptions['recursive'])
+        all_results = []
+        for gen in images:
+            for image in gen:
+                result = method(str(image), runtimeOptions)
+                all_results.append(result)
+                action_obj.do_action(result, runtimeOptions)
+                
+        action_obj.finish(runtimeOptions)
+        return all_results
 
+    @staticmethod
+    def runValidator(runtimeOptions, moduleResults):
+        validator_class = load_validator(runtimeOptions['validator'])
+        if validator_class is not None:
+            validator_class.validate(runtimeOptions['validation'], moduleResults, runtimeOptions)
+    
 
 def load_module_and_method(modulePath, methodToCall):
-    module = import_module(modulePath)
+    module = None
+    try:
+        module = import_module(modulePath)
+    except ModuleNotFoundError:
+        exit(-1)
     method = getattr(module, methodToCall)
     return module, method
 
@@ -43,3 +55,31 @@ def get_image_paths(path, isRecursive):
             else:
                 result = list(Path(path).glob(pattern))
     return result
+
+
+def load_action(action):
+    module = None
+    try:
+        module = import_module('Actions.{}'.format(action))
+    except ModuleNotFoundError:
+        exit(-1)
+
+    for el in inspect.getmembers(module, inspect.isclass):
+        if el[0].casefold() == action:
+            action_class = getattr(module, el[0])
+            return action_class()
+    return None
+
+def load_validator(validator):
+    try:
+        module = import_module('Validators.{}'.format(validator))
+        for class_name, class_obj in inspect.getmembers(module, inspect.isclass):
+            if class_name == validator:
+                if issubclass(class_obj, Validator):
+                    return class_obj
+        return None
+
+    except ModuleNotFoundError:
+        print("Cannot load validator")
+        exit(-1)
+
