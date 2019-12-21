@@ -4,6 +4,7 @@ import sys
 import inspect
 import glob
 base_path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 sys.path.append(base_path)
 sys.path.append(base_path + '/Validators/')
 import Validators.Validator as v
