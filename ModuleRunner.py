@@ -77,9 +77,8 @@ def load_validator(validator):
             if class_name == validator:
                 if issubclass(class_obj, Validator):
                     return class_obj
-        return None
-
+        
     except ModuleNotFoundError:
-        print("Cannot load validator")
-        exit(-1)
+        print("Cannot load validator: " + validator)
 
+    return None

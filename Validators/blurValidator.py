@@ -28,7 +28,7 @@ class BlurValidator(Validator):
                 imges.append(imgList)
             return extension, imges
         else:
-            print("Not supported file format")
+            print("Not supported file format: " + extension)
             return None, None
 
     @staticmethod
@@ -36,11 +36,11 @@ class BlurValidator(Validator):
 
         if extension == "xlsx":
             results = pd.DataFrame(results, columns = ["image", "label", "classification"])
-            results.to_excel("raport.xlsx", index = None, header = True)
+            results.to_excel("validation_result.xlsx", index = None, header = True)
 
         elif extension == "json":
             results = pd.DataFrame(results, columns = ["image", "label", "classification"])
-            results.to_json("raport.json", orient='split', index = False)
+            results.to_json("validation_result.json", orient='split', index = False)
 
         elif extension == "xml":
             result = ET.Element('raport')
@@ -49,9 +49,9 @@ class BlurValidator(Validator):
                 ET.SubElement(subelem, 'path').text = str(img)
                 ET.SubElement(subelem, 'label').text = str(label)
                 ET.SubElement(subelem, 'classification').text = str(classification)
-            ET.ElementTree(result).write("raport.xml")
+            ET.ElementTree(result).write("validation_result.xml")
         else:
-            assert("This shouldn't be executed")
+            print("Not supported file format: " + extension)
 
     @staticmethod
     def _extract_only_name(name):
