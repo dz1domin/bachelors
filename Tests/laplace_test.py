@@ -6,5 +6,5 @@ from Modules.laplace.laplace import laplace
 
 
 def test_laplace():
-    out = laplace('./TestImage/testImage.jpg', {'thresh': 10.0})
+    out = laplace(os.path.dirname(os.path.abspath(__file__)) + '/TestImage/testImage.jpg', {'thresh': 10.0})
     assert out[1] == 'False'

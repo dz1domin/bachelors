@@ -4,6 +4,7 @@ import sys
 import jsonschema
 import json
 from argparse import ArgumentParser
+from pathlib import Path
 base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(base_path)
 import ImageClassificator as ic
@@ -72,7 +73,6 @@ def test_make_fixture():
 def test_create_base_parser():
     parser = ic.create_base_parser()
     parsed = parser.parse_args(['-p', 'some_path'])
-    print(vars(parser))
     assert isinstance(parser, ArgumentParser)
     assert parsed.path == 'some_path'
 
@@ -84,7 +84,7 @@ def test_load_module_definitions(test_make_fixture):
 
 
 def test_load_global_config(test_make_fixture):
-    config = ic.load_global_config('../defaultConfig.json')
+    config = ic.load_global_config(str(Path(os.path.dirname(os.path.abspath(__file__))).parent) + str(Path('/defaultConfig.json')))
     assert isinstance(config, dict)
     for key in config.keys():
         assert key in test_make_fixture[0]

@@ -6,5 +6,5 @@ from Modules.fourier.fourier import fourier
 
 
 def test_fourier():
-    out = fourier('./TestImage/testImage.jpg', {'thresh': 10.0})
+    out = fourier(os.path.dirname(os.path.abspath(__file__)) + '/TestImage/testImage.jpg', {'thresh': 10.0})
     assert out[1] == 'False'
