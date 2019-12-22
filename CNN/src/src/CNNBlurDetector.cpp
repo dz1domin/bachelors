@@ -29,6 +29,8 @@ std::string CNNBlurDetector::classify() noexcept
 {
 	try 
 	{
+		if (!m_config.isValid()){ throw CNNBlurDetectorException("Provided invalid config"); }
+
 		loadImage();
 		loadModel();
 		prepareImageAndCrops();
@@ -146,7 +148,14 @@ void CNNBlurDetector::createImageWithCropsClassification(std::string pathToSave)
 		}
 	}
 
-	cv::imwrite(pathToSave, outputImg);
+	try 
+	{
+		cv::imwrite(pathToSave, outputImg);
+	}
+	catch (std::exception& e)
+	{
+		std::cout << e.what() << std::endl;
+	}
 
 }
 

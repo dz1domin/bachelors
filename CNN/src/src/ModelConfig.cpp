@@ -28,6 +28,8 @@ BlurDetector::ModelConfig::ModelConfig(const std::string& imgPath, const boost::
 
 		if (!input.has_key("thresh")) { return; }
 		m_threshold = std::stod(boost::python::extract<std::string>(input.get("thresh")));
+		if (m_threshold < 0 || m_threshold > 1) { return; }
+
 
 		if (!input.has_key("visualization")) { return; }
 		
