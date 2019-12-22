@@ -23,7 +23,7 @@ def test_print():
 
 
 def test_copy(runtime_fixture):
-    img = Image.open(os.path.dirname(os.path.abspath(__file__)) + './TestImage/testImage.jpg')
+    img = Image.open(os.path.dirname(os.path.abspath(__file__)) + '/TestImage/testImage.jpg')
     copy_obj = Copy()
     assert isinstance(copy_obj, ActionInterface)
     copy_obj.setup(runtime_fixture)
