@@ -63,7 +63,6 @@ TEST_F(CNNBlurDetectorTest, regularScenarioWithoutVisualization)
 	const char* imgPath = "../../files/blurred.jpg";
 	dict["modelPath"] = "../../files/trainedModel.pt";
 	dict["thresh"] = "0.5";
-	dict["visualization"] = "false";
 
 	BlurDetector::ModelConfig config{ imgPath, dict };
 	ASSERT_EQ(config.isValid(), true);
@@ -82,20 +81,20 @@ TEST_F(CNNBlurDetectorTest, regularScenarioWithVisualizationBlurred)
 	const char* imgPath = "../../files/blurred.jpg";
 	dict["modelPath"] = "../../files/trainedModel.pt";
 	dict["thresh"] = "0.5";
-	dict["visualization"] = "true";
-	dict["visualizationPath"] = "result.jpg";
+	dict["visualization"] = ".";
 
 	BlurDetector::ModelConfig config{ imgPath, dict };
 	ASSERT_EQ(config.isValid(), true);
-	ASSERT_EQ("result.jpg", config.getVisualizationPath());
+	ASSERT_EQ(".", config.getVisualizationPath());
+	ASSERT_EQ("blurred.jpg", config.getImageName());
 	BlurDetector::CNNBlurDetector detector{ config };
 	ASSERT_EQ(detector.classify(), BlurDetector::ResultTypes[BlurDetector::BLURRED]);
 
 	detector.createImageWithCropsClassification(config.getVisualizationPath());
-	ASSERT_EQ(std::filesystem::is_regular_file(config.getVisualizationPath()), true);
+	ASSERT_EQ(std::filesystem::is_regular_file(config.getVisualizationPath() + "/" + config.getImageName()), true);
 	
-	std::filesystem::remove(config.getVisualizationPath());
-	ASSERT_EQ(std::filesystem::is_regular_file(config.getVisualizationPath()), false);
+	std::filesystem::remove(config.getVisualizationPath() + "/" + config.getImageName());
+	ASSERT_EQ(std::filesystem::is_regular_file(config.getVisualizationPath() + "/" + config.getImageName()), false);
 }
 
 
@@ -106,43 +105,43 @@ TEST_F(CNNBlurDetectorTest, regularScenarioWithVisualizationSharp)
 	const char* imgPath = "../../files/sharp.jpg";
 	dict["modelPath"] = "../../files/trainedModel.pt";
 	dict["thresh"] = "0.5";
-	dict["visualization"] = "true";
-	dict["visualizationPath"] = "result.jpg";
+	dict["visualization"] = ".";
 
 	BlurDetector::ModelConfig config{ imgPath, dict };
 	ASSERT_EQ(config.isValid(), true);
-	ASSERT_EQ("result.jpg", config.getVisualizationPath());
+	ASSERT_EQ(".", config.getVisualizationPath());
+	ASSERT_EQ("sharp.jpg", config.getImageName());
 	BlurDetector::CNNBlurDetector detector{ config };
 	ASSERT_EQ(detector.classify(), BlurDetector::ResultTypes[BlurDetector::SHARP]);
 
 	detector.createImageWithCropsClassification(config.getVisualizationPath());
-	ASSERT_EQ(std::filesystem::is_regular_file(config.getVisualizationPath()), true);
+	ASSERT_EQ(std::filesystem::is_regular_file(config.getVisualizationPath() + "/" + config.getImageName()), true);
 
-	std::filesystem::remove(config.getVisualizationPath());
-	ASSERT_EQ(std::filesystem::is_regular_file(config.getVisualizationPath()), false);
+	std::filesystem::remove(config.getVisualizationPath() + "/" + config.getImageName());
+	ASSERT_EQ(std::filesystem::is_regular_file(config.getVisualizationPath() + "/" + config.getImageName()), false);
 }
 
 
-TEST_F(CNNBlurDetectorTest, invalidVisualizationFormat)
+TEST_F(CNNBlurDetectorTest, emptyVisualization)
 {
 
 	boost::python::dict dict;
 	const char* imgPath = "../../files/sharp.jpg";
 	dict["modelPath"] = "../../files/trainedModel.pt";
 	dict["thresh"] = "0.5";
-	dict["visualization"] = "true";
-	dict["visualizationPath"] = "result.jpdsag";
+	dict["visualization"] = "";
 
 	BlurDetector::ModelConfig config{ imgPath, dict };
 	ASSERT_EQ(config.isValid(), true);
-	ASSERT_EQ("result.jpdsag", config.getVisualizationPath());
+	ASSERT_EQ("", config.getVisualizationPath());
+	ASSERT_EQ("sharp.jpg", config.getImageName());
 	BlurDetector::CNNBlurDetector detector{ config };
 	ASSERT_EQ(detector.classify(), BlurDetector::ResultTypes[BlurDetector::SHARP]);
 
-	::testing::internal::CaptureStdout();
 	detector.createImageWithCropsClassification(config.getVisualizationPath());
-	ASSERT_EQ(std::filesystem::is_regular_file(config.getVisualizationPath()), false);
-	::testing::internal::GetCapturedStdout(); 
+	ASSERT_EQ(std::filesystem::is_regular_file(config.getImageName()), true);
+	std::filesystem::remove(config.getImageName());
+	ASSERT_EQ(std::filesystem::is_regular_file(config.getImageName()), false);
 
 }
 
@@ -153,8 +152,6 @@ TEST_F(CNNBlurDetectorTest, invalidThreshold)
 	const char* imgPath = "../../files/sharp.jpg";
 	dict["modelPath"] = "../../files/trainedModel.pt";
 	dict["thresh"] = "-23";
-	dict["visualization"] = "false";
-
 
 	BlurDetector::ModelConfig config{ imgPath, dict };
 	ASSERT_EQ(config.isValid(), false);
@@ -173,8 +170,6 @@ TEST_F(CNNBlurDetectorTest, invalidModelPath)
 	const char* imgPath = "../../files/sharp.jpg";
 	dict["modelPath"] = "../../files/traindasfasedModel.pt";
 	dict["thresh"] = "0.5";
-	dict["visualization"] = "false";
-
 
 	BlurDetector::ModelConfig config{ imgPath, dict };
 	ASSERT_EQ(config.isValid(), true);

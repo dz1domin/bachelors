@@ -23,6 +23,27 @@ BlurDetector::ModelConfig::ModelConfig(const std::string& imgPath, const boost::
 	{
 		m_imagePath = imgPath;
 
+		auto res_1 = m_imagePath.rfind('/');
+		auto res_2 = m_imagePath.rfind('\\');
+		if (res_1 != std::string::npos && res_2 != std::string::npos)
+		{
+			auto max_res = res_1 > res_2 ? res_1 : res_2;
+			m_imageName = std::string(m_imagePath, max_res + 1);
+		}
+		else if (res_1 != std::string::npos)
+		{
+			m_imageName = std::string(m_imagePath, res_1 + 1);
+		}
+		else if (res_2 != std::string::npos)
+		{
+			m_imageName = std::string(m_imagePath, res_2 + 1);
+		}
+		else
+		{
+			m_imageName = m_imagePath;
+		}
+
+
 		if (!input.has_key("modelPath")) { return; }
 		if (auto val = boost::python::extract<std::string>(input.get("modelPath")); val.check())
 		{ m_modelPath = val(); }
@@ -36,19 +57,15 @@ BlurDetector::ModelConfig::ModelConfig(const std::string& imgPath, const boost::
 		if (m_threshold < 0 || m_threshold > 1) { return; }
 
 
-		if (!input.has_key("visualization")) { return; }
-		if(auto val = boost::python::extract<std::string>(input.get("visualization")); val.check())
-		{ m_shouldCreateDetailedImage = (std::string_view("true") == val()); }
-		else { return; }
-
-		if (m_shouldCreateDetailedImage)
+		if (input.has_key("visualization"))
 		{
-			if (!input.has_key("visualizationPath")) { return; }
-			if(auto val = boost::python::extract<std::string>(input.get("visualizationPath")); val.check())
-			{ m_visualizationPath = val(); }
-			else { return; }
+			if (auto val = boost::python::extract<std::string>(input.get("visualization")); val.check())
+			{
+				m_visualizationPath = val();
+				m_shouldCreateDetailedImage = true;
+			}
 		}
-
+		
 		m_isValid = true;
 	}
 	catch (std::exception& e)
@@ -57,3 +74,4 @@ BlurDetector::ModelConfig::ModelConfig(const std::string& imgPath, const boost::
 	}
 
 }
+

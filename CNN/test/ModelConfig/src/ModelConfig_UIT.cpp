@@ -3,6 +3,7 @@
 #include "ModelConfig.hpp"
 #include <memory>
 #include <filesystem>
+#include <vector>
 
 
 class ModelConfigTest : public ::testing::Test
@@ -63,7 +64,7 @@ TEST_F(ModelConfigTest, lackOfKeys_2)
 	dict["thresh"] = "0.5";
 
 	BlurDetector::ModelConfig config{ imgPath, dict };
-	ASSERT_EQ(config.isValid(), false);
+	ASSERT_EQ(config.isValid(), true);
 	ASSERT_EQ(config.getImagePath(), imgPath);
 	ASSERT_EQ(config.getModelPath(), "modelPath");
 	ASSERT_EQ(config.getThreshold(), 0.5);
@@ -72,21 +73,21 @@ TEST_F(ModelConfigTest, lackOfKeys_2)
 
 }
 
-TEST_F(ModelConfigTest, emptyValidationPathWhenEnabled)
+TEST_F(ModelConfigTest, emptyVisualizationPath)
 {
 
 	boost::python::dict dict{};
 	dict["modelPath"] = "modelPath";
 	const char* imgPath = "imgPath";
 	dict["thresh"] = "0.5";
-	dict["visualization"] = "true";
+	dict["visualization"] = "";
 
 	BlurDetector::ModelConfig config{ imgPath, dict };
-	ASSERT_EQ(config.isValid(), false);
+	ASSERT_EQ(config.isValid(), true);
 	ASSERT_EQ(config.getImagePath(), imgPath);
 	ASSERT_EQ(config.getModelPath(), "modelPath");
 	ASSERT_EQ(config.getThreshold(), 0.5);
-	ASSERT_EQ(config.getVisualizationPath(), "INVALID");
+	ASSERT_EQ(config.getVisualizationPath(), "");
 	ASSERT_EQ(config.shouldCreateDetailedImage(), true);
 
 }
@@ -98,15 +99,15 @@ TEST_F(ModelConfigTest, validConfig)
 	dict["modelPath"] = "modelPath";
 	const char* imgPath = "imgPath";
 	dict["thresh"] = "0.5";
-	dict["visualization"] = "true";
-	dict["visualizationPath"] = "result.jpg";
+	dict["visualization"] = "dir";
 
 	BlurDetector::ModelConfig config{ imgPath, dict };
 	ASSERT_EQ(config.isValid(), true);
 	ASSERT_EQ(config.getImagePath(), imgPath);
 	ASSERT_EQ(config.getModelPath(), "modelPath");
 	ASSERT_EQ(config.getThreshold(), 0.5);
-	ASSERT_EQ(config.getVisualizationPath(), "result.jpg");
+	ASSERT_EQ(config.getVisualizationPath(), "dir");
+	ASSERT_EQ(config.getImageName(), imgPath);
 	ASSERT_EQ(config.shouldCreateDetailedImage(), true);
 }
 
@@ -117,8 +118,7 @@ TEST_F(ModelConfigTest, thresholdOutOfRange)
 	dict["modelPath"] = "modelPath";
 	const char* imgPath = "imgPath";
 	dict["thresh"] = "1.2";
-	dict["visualization"] = "true";
-	dict["visualizationPath"] = "result.jpg";
+	dict["visualization"] = ".";
 
 	BlurDetector::ModelConfig config{ imgPath, dict };
 	ASSERT_EQ(config.isValid(), false);
@@ -136,8 +136,6 @@ TEST_F(ModelConfigTest, thresholdOutOfRange_2)
 	dict["modelPath"] = "modelPath";
 	const char* imgPath = "imgPath";
 	dict["thresh"] = "-0.2";
-	dict["visualization"] = "true";
-	dict["visualizationPath"] = "result.jpg";
 
 	BlurDetector::ModelConfig config{ imgPath, dict };
 	ASSERT_EQ(config.isValid(), false);
@@ -147,6 +145,21 @@ TEST_F(ModelConfigTest, thresholdOutOfRange_2)
 	ASSERT_EQ(config.getVisualizationPath(), "INVALID");
 	ASSERT_EQ(config.shouldCreateDetailedImage(), false);
 }
+
+TEST_F(ModelConfigTest, getImageName)
+{
+	
+
+	std::vector<std::string> names = { "\\lala/image.jpg", "\\lala\\image.jpg", "/lala\\image.jpg", "/lala/image.jpg",
+		"./image.jpg", "/image.jpg", "image.jpg" };
+	for (auto& name : names)
+	{
+		boost::python::dict dict{};
+		BlurDetector::ModelConfig config(name, dict);
+		ASSERT_EQ(config.getImageName(), "image.jpg");
+	}
+}
+
 
 int main(int argc, char** argv)
 {

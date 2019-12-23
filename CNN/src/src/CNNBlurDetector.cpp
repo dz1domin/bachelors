@@ -15,6 +15,7 @@
 
 #include <torch/torch.h>
 #include <torch/script.h>
+#include <filesystem>
 
 using namespace BlurDetector;
 
@@ -131,7 +132,13 @@ void CNNBlurDetector::createImageWithCropsClassification(std::string pathToSave)
 
 	try 
 	{
-		cv::imwrite(pathToSave, outputImg);
+		if (!std::filesystem::exists(pathToSave) && m_config.getVisualizationPath() != "." && !m_config.getVisualizationPath().empty())
+		{ std::filesystem::create_directory(pathToSave); }
+
+		if (m_config.getVisualizationPath() == "." || m_config.getVisualizationPath().empty())
+		{ cv::imwrite(m_config.getImageName(), outputImg); }
+
+		else { cv::imwrite(pathToSave + "/" + m_config.getImageName(), outputImg); }
 	}
 	catch (std::exception& e)
 	{

@@ -33,6 +33,9 @@ namespace BlurDetector
 		const std::string& getModelPath() const noexcept { return m_modelPath; }
 		bool shouldCreateDetailedImage() const noexcept { return m_shouldCreateDetailedImage; }
 		const std::string& getVisualizationPath() const noexcept { return m_visualizationPath; }
+		const std::string& getImageName() const noexcept { return m_imageName; }
+
+
 
 	private:
 
@@ -40,6 +43,7 @@ namespace BlurDetector
 		std::string m_imagePath = "INVALID";
 		std::string m_modelPath = "INVALID";
 		std::string m_visualizationPath = "INVALID";
+		std::string m_imageName = "INVALID";
 		bool m_shouldCreateDetailedImage = false;
 		bool m_isValid = false;
 
