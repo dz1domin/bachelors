@@ -130,7 +130,8 @@ def should_run_validation(options):
 
 def add_default_module_values(moduleDefinition, optionsDict):
     for option in moduleDefinition['info']['options']:
-        optionsDict[option['option'].split('-')[-1]] = option['default'] if 'default' in option.keys() else None
+        if optionsDict[option['option'].split('-')[-1]] is None:
+            optionsDict[option['option'].split('-')[-1]] = option['default'] if 'default' in option.keys() else None
 
 if __name__ == "__main__":
     main()

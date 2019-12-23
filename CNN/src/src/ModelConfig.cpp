@@ -24,21 +24,29 @@ BlurDetector::ModelConfig::ModelConfig(const std::string& imgPath, const boost::
 		m_imagePath = imgPath;
 
 		if (!input.has_key("modelPath")) { return; }
-		m_modelPath = boost::python::extract<std::string>(input.get("modelPath"));
+		if (auto val = boost::python::extract<std::string>(input.get("modelPath")); val.check())
+		{ m_modelPath = val(); }
+		else { return; };
 
 		if (!input.has_key("thresh")) { return; }
-		m_threshold = std::stod(boost::python::extract<std::string>(input.get("thresh")));
+		if (auto val = boost::python::extract<std::string>(input.get("thresh")); val.check())
+		{ m_threshold = std::stod(val()); }
+		else { return; }
+
 		if (m_threshold < 0 || m_threshold > 1) { return; }
 
 
 		if (!input.has_key("visualization")) { return; }
-		
-		m_shouldCreateDetailedImage = (std::string_view("true") == static_cast<std::string>(boost::python::extract<std::string>(input.get("visualization"))));
+		if(auto val = boost::python::extract<std::string>(input.get("visualization")); val.check())
+		{ m_shouldCreateDetailedImage = (std::string_view("true") == val()); }
+		else { return; }
 
 		if (m_shouldCreateDetailedImage)
 		{
 			if (!input.has_key("visualizationPath")) { return; }
-			m_visualizationPath = boost::python::extract<std::string>(input.get("visualizationPath"));
+			if(auto val = boost::python::extract<std::string>(input.get("visualizationPath")); val.check())
+			{ m_visualizationPath = val(); }
+			else { return; }
 		}
 
 		m_isValid = true;

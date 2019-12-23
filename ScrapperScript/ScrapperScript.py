@@ -79,17 +79,20 @@ def download(apiKey, query, pageNum, k):
     return len(data['hits']), k
 
 
-checkIfDestinationFolderExistsAndCreateIfNecessary(STORAGE_OF_IMAGES_PATH)
-apiKey = getAPIKeyFromUserIfNeeded()
-while True:
-    query = input('type your query in:\n')
-    p = 0
-    downloadedData, currentIndex = download(apiKey, query, p, 0)
-    if(downloadedData == REQUEST_FAILURE):
-        cleanAfterRequestFailure()
-        apiKey = getAPIKeyFromUserIfNeeded()
-    else:
-        print(downloadedData)
-        while downloadedData > 0:
-            p += 1
-            downloadedData, currentIndex = download(apiKey, query, p, currentIndex + 1)
+
+
+if __name__ == "__main__":
+    checkIfDestinationFolderExistsAndCreateIfNecessary(STORAGE_OF_IMAGES_PATH)
+    apiKey = getAPIKeyFromUserIfNeeded()
+    while True:
+        query = input('type your query in:\n')
+        p = 0
+        downloadedData, currentIndex = download(apiKey, query, p, 0)
+        if(downloadedData == REQUEST_FAILURE):
+            cleanAfterRequestFailure()
+            apiKey = getAPIKeyFromUserIfNeeded()
+        else:
+            print(downloadedData)
+            while downloadedData > 0:
+                p += 1
+                downloadedData, currentIndex = download(apiKey, query, p, currentIndex + 1)
