@@ -27,7 +27,6 @@ TEST_F(CNNBlurDetectorTest, invalidConfig)
 
 	boost::python::dict dict{};
 	const char* imgPath = "INVALID";
-	const char* visualizationPath = "INVALID";
 	::testing::internal::CaptureStdout();
 
 	BlurDetector::ModelConfig config{ imgPath, dict };
