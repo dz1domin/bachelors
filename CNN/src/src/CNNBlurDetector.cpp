@@ -120,32 +120,13 @@ void CNNBlurDetector::createImageWithCropsClassification(std::string pathToSave)
 		return;
 	}
 
-	static cv::Mat greenMask;
-	if (greenMask.empty())
-	{
-		greenMask = cv::Mat(CROP_SIZE, CROP_SIZE, CV_8UC3);
-		greenMask = cv::Scalar(0, 255, 0);
-	}
-	
-	static cv::Mat redMask; 
-	if (redMask.empty())
-	{
-		redMask = cv::Mat(CROP_SIZE, CROP_SIZE, CV_8UC3);
-		redMask = cv::Scalar(0, 0, 255);
-	}
-
+	static cv::Mat greenMask = cv::Mat(CROP_SIZE, CROP_SIZE, CV_8UC3, { 0, 255, 0 });
+	static cv::Mat redMask = cv::Mat(CROP_SIZE, CROP_SIZE, CV_8UC3, { 0, 0, 255 });
 
 	cv::Mat outputImg(m_originalImage.rows, m_originalImage.cols, CV_8UC3);
 	for (auto&[rect, classificationResult] : m_cropsClassification)
 	{
-		if (SHARP == classificationResult)
-		{
-			cv::addWeighted(m_originalImage(rect), 1.0, greenMask, 0.2, 0, outputImg(rect));
-		}
-		else if (BLURRED == classificationResult)
-		{
-			cv::addWeighted(m_originalImage(rect), 1.0, redMask, 0.2, 0, outputImg(rect));
-		}
+		cv::addWeighted(m_originalImage(rect), 1.0, (classificationResult == SHARP ? greenMask : redMask), 0.2, 0, outputImg(rect));
 	}
 
 	try 
@@ -173,4 +154,3 @@ std::string CNNBlurDetector::getClassificationResult() const
 	}
 	return ResultTypes[BLURRED];
 }
-

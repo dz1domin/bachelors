@@ -30,7 +30,7 @@ namespace BlurDetector
 	};
 
 	constexpr std::array<const char*, NUM_OF_RESULTS> ResultTypes{ "SHARP", "BLURRED", "PROCESSING_ERROR" };
-	constexpr int CROP_SIZE = 64;
+	constexpr unsigned int CROP_SIZE = 64;
 
 	// Main processing class
 
@@ -55,6 +55,8 @@ namespace BlurDetector
 		std::string getClassificationResult() const;
 
 		void normalizeTensor(at::Tensor& tensor) const;
+
+		cv::Mat initializeMask(unsigned int squareSize, unsigned int blue, unsigned int green, unsigned int red);
 
 
 	private:
