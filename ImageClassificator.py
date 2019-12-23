@@ -35,14 +35,16 @@ schema_string = """
             "type": "object",
             "patternProperties": {
               "^(option|help|required|action|nargs|const|default|type|choices|metavar|dest)": {
-                
+
               }
             }
           }
         }
-      }
+      },
+      "required": ["path"]
     }
-  }
+  },
+  "required": ["name", "methodToCall"]
 }
 """
 
@@ -130,8 +132,9 @@ def should_run_validation(options):
 
 def add_default_module_values(moduleDefinition, optionsDict):
     for option in moduleDefinition['info']['options']:
-        if optionsDict[option['option'].split('-')[-1]] is None:
+        if option['option'].split('-')[-1] not in optionsDict or optionsDict[option['option'].split('-')[-1]] is None:
             optionsDict[option['option'].split('-')[-1]] = option['default'] if 'default' in option.keys() else None
+
 
 if __name__ == "__main__":
     main()

@@ -95,3 +95,8 @@ def test_add_module_defualt_values(test_make_fixture):
     assert bool(options) is False
     ic.add_default_module_values(json.loads(test_make_fixture[2]), options)
     assert options['test'] == 12123
+    options = {'path': './Images', 'recursive': False, 'validation': None, 'validator': None, 'action': 'print', 'actionOut': './Output', 'moduleName': 'test', 'test': '10'}
+    print(options['test'])
+    ic.add_default_module_values(json.loads(test_make_fixture[2]), options)
+    assert options['test'] == '10'
+
