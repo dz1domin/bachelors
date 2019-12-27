@@ -4,6 +4,8 @@ import numpy as np
 
 def fourier(img_path, options):
     img = cv2.imread(r'{}'.format(img_path))
+    if img is None:
+        return '', ''
     img_gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
     row, cols = img_gray.shape
     crow, ccol = row // 2, cols // 2
