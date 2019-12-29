@@ -12,7 +12,7 @@ def fourier(img_path, options):
     xoff, yoff = int(row * 0.05), int(cols * 0.05)
     fft = np.fft.fft2(img_gray)
     fft_shifted = np.fft.fftshift(fft)
-    fft_shifted[crow - xoff:crow + xoff, ccol - yoff:ccol + yoff] = 0
+    fft_shifted[crow - xoff: crow + xoff, ccol - yoff: ccol + yoff] = 0.0
     fft_inverse_shift = np.fft.ifftshift(fft_shifted)
     fft_inverse = np.fft.ifft2(fft_inverse_shift)
     return img_path, str(np.var(np.abs(fft_inverse)) < float(options['thresh']))
