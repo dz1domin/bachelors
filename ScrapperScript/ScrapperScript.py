@@ -76,6 +76,8 @@ def download(apiKey, query, pageNum, k):
         outFile.write(res.content)
         k += 1
         res.close()
+        if k == 24:
+            exit(0)
     return len(data['hits']), k
 
 
