@@ -13,30 +13,30 @@ RUN apt-get update \
     && apt-get install -y python3.7-dev \
     && apt-get install -y libgtest-dev \
     && cd /usr/src/gtest && cmake . && make install \
-    && mkdir root/anaconda && cd root/anaconda && wget https://repo.anaconda.com/archive/Anaconda3-2019.10-Linux-x86_64.sh \
+    && mkdir ~/anaconda && cd ~/anaconda && wget https://repo.anaconda.com/archive/Anaconda3-2019.10-Linux-x86_64.sh \
     && /bin/bash Anaconda3-2019.10-Linux-x86_64.sh -b -p "/opt/conda" && export PATH="$PATH:/opt/conda/bin" \
     && conda init \
     && /opt/conda/bin/python -m pip install opencv-python \
     && /opt/conda/bin/python -m pip install jsonschema \
     && /opt/conda/bin/python -m pip install requests \
-    && mkdir root/libs && cd root/libs \
+    && mkdir ~/libs && cd ~/libs \
     && wget https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-1.3.1%2Bcpu.zip \
     && unzip libtorch-cxx11-abi-shared-with-deps-1.3.1+cpu.zip  \
     && rm -rf libtorch-cxx11-abi-shared-with-deps-1.3.1+cpu.zip \
-    && rm -rf root/anaconda/Anaconda3-2019.10-Linux-x86_64.sh
+    && rm -rf ~/anaconda/Anaconda3-2019.10-Linux-x86_64.sh
 
 ENV PATH="${PATH}:/opt/conda/bin:/opt/conda/lib/python3.7/site-packages"
-ENV Torch_DIR="root/libs/libtorch/share/cmake"
+ENV Torch_DIR="~/libs/libtorch/share/cmake"
 
-RUN mkdir root/ImageClassifier && cd root/ImageClassifier \
+RUN mkdir ~/ImageClassifier && cd ~/ImageClassifier \
     && wget https://github.com/dz1domin/bachelors/archive/master.zip \
     && unzip master.zip && cd bachelors-master \
-    && pytest && /opt/conda/bin/python root/ImageClassifier/bachelors-master/CNN/test/run_tests.py \
-    && /opt/conda/bin/python root/ImageClassifier/bachelors-master/CNN/build.py
+    && pytest && /opt/conda/bin/python ~/ImageClassifier/bachelors-master/CNN/test/run_tests.py \
+    && /opt/conda/bin/python ~/ImageClassifier/bachelors-master/CNN/build.py
     
-RUN cd root/ImageClassifier/bachelors-master/ScrapperScript \
+RUN cd ~/ImageClassifier/bachelors-master/ScrapperScript \
     && echo '13474752-7f4d5ee19e3fdf0354dae6977\nyellow+flower' | /opt/conda/bin/python ScrapperScript.py \
-    && cd root/ImageClassifier/bachelors-master/PrepareSamples \
+    && cd ~/ImageClassifier/bachelors-master/PrepareSamples \
     && /opt/conda/bin/python PrepareSamples.py
 
 WORKDIR root/ImageClassifier/bachelors-master
