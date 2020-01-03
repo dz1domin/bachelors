@@ -66,7 +66,7 @@ class BlurValidator(Validator):
     @staticmethod
     def validate(validationFile, moduleResults, moduleOptions):
 
-        moduleResults =  { BlurValidator._extract_only_name(x): 0 if y == 'True' else 1 for x, y in moduleResults }
+        moduleResults =  { BlurValidator._extract_only_name(x): 1 if y == 'True' else 0 for x, y in moduleResults }
         extension, data = BlurValidator._load_and_parse_data(validationFile)
 
         if extension is not None and data is not None:

@@ -8,12 +8,12 @@
       {
         "option": "-modelPath",
         "help": "Path to trained CNN model",
-        "required": "true"
+        "default": "Modules/cnn/model.pt"
       },
       {
         "option": "-thresh",
         "help": "Determines threshold (0-1) to accept image as clear.",
-        "required": "true"
+        "default": "0.25"
       },
       {
         "option": "-visualization",

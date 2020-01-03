@@ -36,7 +36,7 @@ boost::python::tuple cnn(boost::python::object& imagePath, boost::python::dict& 
 		detector.createImageWithCropsClassification(config.getVisualizationPath());
 	}
 
-	result = std::string(result == BlurDetector::ResultTypes[BlurDetector::BLURRED] ? "False" : "True");
+	result = std::string(result == BlurDetector::ResultTypes[BlurDetector::BLURRED] ? "True" : "False");
 	return boost::python::make_tuple(imagePath, result);
 }
 
