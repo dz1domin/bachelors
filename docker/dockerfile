@@ -39,4 +39,6 @@ RUN cd ~/ImageClassifier/bachelors-master/ScrapperScript \
     && cd ~/ImageClassifier/bachelors-master/PrepareSamples \
     && /opt/conda/bin/python PrepareSamples.py
 
-WORKDIR root/ImageClassifier/bachelors-master
+WORKDIR /root/ImageClassifier/bachelors-master
+ENTRYPOINT echo "Classification has been started \n\
+check logs.txt for details" && /bin/bash run_all_classifications.sh > logs.txt
