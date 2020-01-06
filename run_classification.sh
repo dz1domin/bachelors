@@ -2,7 +2,7 @@
 
 CLASSIFIER=$1
 echo "Running $CLASSIFIER"
-CMD="python ImageClassificator.py \
+CMD="/opt/conda/bin/python ImageClassificator.py \
  -p PrepareSamples/ -r -v PrepareSamples/validation.json -z BlurValidator -a copy ${CLASSIFIER}"
 
 if [ "$CLASSIFIER" == "cnn" ]; then
