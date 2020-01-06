@@ -8,7 +8,6 @@
       {
         "option": "-thresh",
         "help": "Determines threshold to accept image as clear.",
-        "required": "true",
         "default": 100.0
       }
     ],
