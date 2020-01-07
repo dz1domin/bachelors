@@ -1,6 +1,6 @@
 from Actions.actioninterface import ActionInterface
 import json
-
+import os
 
 class Report(ActionInterface):
     def __init__(self):
@@ -10,6 +10,8 @@ class Report(ActionInterface):
 
     def setup(self, runtimeOptions):
         self.outFile = runtimeOptions['actionOut'] + '/report.json'
+        if not os.path.isdir(runtimeOptions['actionOut']):
+            os.mkdir(runtimeOptions['actionOut'])
 
     def do_action(self, moduleResult, runtimeOptions):
         self.collection.append(moduleResult)

@@ -2,6 +2,7 @@
 
 clean=false
 interactive=false
+quiet=false
 
 for option in "$@"
 do
@@ -14,6 +15,10 @@ case $option in
     clean=true
     shift
     ;;
+    -q|--quiet)
+    quiet=true
+    shift
+    ;;
     *)
     
     ;;
@@ -21,7 +26,12 @@ esac
 done
 
 echo "Building image..."
-imageHash=$(docker build .)
+if $quiet; then
+    imageHash=$(docker build .)
+else
+    imageHash=$(docker build . | tee /dev/tty )
+fi
+
 echo "Image has been built"
 imageHash=$(echo "$imageHash" | grep -E -o 'Successfully built [0-9a-f]+' | cut -d' ' -f3)
 
