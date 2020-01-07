@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 clean=false
 interactive=false
 
@@ -21,23 +20,22 @@ case $option in
 esac
 done
 
-
 echo "Building image..."
 imageHash=$(docker build .)
 echo "Image has been built"
 imageHash=$(echo "$imageHash" | grep -E -o 'Successfully built [0-9a-f]+' | cut -d' ' -f3)
 
-echo "Running container..."
-docker run "${imageHash}"
-echo "Container finished his job"
-echo "Copying result files to current directory..."
-containerHash=$(docker ps -aqf "ancestor=${imageHash}" | head -qn 1)
-docker cp "${containerHash}:/root/ImageClassifier/bachelors-master" "result"
-echo "Copied"
-
 if $interactive; then
     echo "Interactive mode"
     docker run -it --entrypoint /bin/bash "${imageHash}"
+else
+    echo "Running container..."
+    docker run "${imageHash}"
+    echo "Container finished his job"
+    echo "Copying result files to current directory..."
+    containerHash=$(docker ps -aqf "ancestor=${imageHash}" | head -qn 1)
+    docker cp "${containerHash}:/root/ImageClassifier/bachelors-master" "result"
+    echo "Copied"
 fi
 
 if $clean; then
