@@ -27,9 +27,9 @@ done
 
 echo "Building image..."
 if $quiet; then
-    imageHash=$(docker build .)
+    imageHash=$(docker build --no-cache .)
 else
-    imageHash=$(docker build . | tee /dev/tty )
+    imageHash=$(docker build --no-cache . | tee /dev/tty )
 fi
 
 echo "Image has been built"
