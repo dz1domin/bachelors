@@ -35,7 +35,7 @@ REPODIR="bachelors"
 echo "Checking repository directory..."
 if [[ -d "$REPODIR" ]]; then
     echo "Repository already exists, pulling  to be up to date..."
-    cd "{$WORKINGDIR}/$REPODIR" && git pull
+    cd "${WORKINGDIR}/${REPODIR}" && git pull
     cd "$WORKINGDIR"
 else
     echo "Repository does not exist, cloning..."
@@ -75,6 +75,8 @@ else
     docker run "${imageHash}"
     echo "Finished."
 fi
+
+rm -rf "${WORKINGDIR}/result" 2> /dev/null
 
 echo "Copying result files to current directory..."
 containerHash=$(docker ps -aqf "ancestor=${imageHash}" | head -qn 1)
