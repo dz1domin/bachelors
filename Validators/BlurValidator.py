@@ -69,8 +69,9 @@ class BlurValidator(Validator):
         moduleResults =  { BlurValidator._extract_only_name(x): 1 if y == 'True' else 0 for x, y in moduleResults }
         extension, data = BlurValidator._load_and_parse_data(validationFile)
 
+
         if extension is not None and data is not None:
-            data = { x: y for x, y in data}
+            data = { str(x).strip(): y for x, y in data}
 
             validationResult = []
             validClassifications = 0

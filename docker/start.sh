@@ -32,9 +32,9 @@ esac
 done
 
 REPODIR="bachelors"
-echo "Checking repository directory..."
+echo "Checking status of repository..."
 if [[ -d "$REPODIR" ]]; then
-    echo "Repository already exists, pulling  to be up to date..."
+    echo "Repository already exists, pulling to make it up to date..."
     cd "${WORKINGDIR}/${REPODIR}" && git pull
     cd "$WORKINGDIR"
 else
@@ -66,25 +66,25 @@ if $interactive; then
     docker run -it --entrypoint /bin/bash "${imageHash}"
 
 elif $user; then
-    echo "Running container with custom classifications..."
+    echo "Running container with user custom images..."
     docker run --entrypoint "/bin/bash" "$imageHash" "run_user_classifications.sh"
     echo "Finished."
 
 else
-    echo "Running container with default classifications..."
+    echo "Running container with default images..."
     docker run "${imageHash}"
     echo "Finished."
 fi
 
 rm -rf "${WORKINGDIR}/result" 2> /dev/null
 
-echo "Copying result files to current directory..."
+echo "Copying result to current directory..."
 containerHash=$(docker ps -aqf "ancestor=${imageHash}" | head -qn 1)
 docker cp "${containerHash}:/root/bachelors" "result"
 echo "Copied."
 
 if $clean; then
-    echo "Removing container and image"
+    echo "Cleaning..."
     docker rm -f "$(docker ps -aqf "ancestor=${imageHash}")"
     docker rmi -f "${imageHash}"
 fi
