@@ -1,15 +1,15 @@
 #!/bin/bash
 
 classifier=$1
-custom_run=false
+user=false
 vis_name="default"
 
 for option in "$@"
 do
 case $option in 
-    -c|--custom)
-    custom_run=true
-    vis_name="user_dir"
+    -u|--user)
+    user=true
+    vis_name="user_photos"
     shift
     ;;
     cnn|fourier|laplace)
@@ -23,9 +23,9 @@ esac
 done
 
 echo "Running $classifier"
-if $custom_run; then
+if $user; then
      CMD="/opt/conda/bin/python ImageClassificator.py \
-        -p user_dir/ -r -a report ${classifier}"
+        -p user_photos/ -r -a report ${classifier}"
 else
     CMD="/opt/conda/bin/python ImageClassificator.py \
         -p PrepareSamples/ -r -v PrepareSamples/validation.json -z BlurValidator -a copy ${classifier}"
@@ -38,7 +38,7 @@ else
     $CMD
 fi
 
-if $custom_run; then
+if $user; then
     mv "Output" "${classifier}_user_dir_Output"
 else
     mv "Output" "${classifier}_Output"

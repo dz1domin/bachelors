@@ -27,19 +27,17 @@ RUN apt-get update \
 
 ENV PATH="${PATH}:/opt/conda/bin:/opt/conda/lib/python3.7/site-packages"
 ENV Torch_DIR="~/libs/libtorch/share/cmake"
+ADD bachelors/ /root/bachelors/
 
-RUN mkdir ~/ImageClassifier && cd ~/ImageClassifier \
-    && wget https://github.com/dz1domin/bachelors/archive/master.zip \
-    && unzip master.zip && cd bachelors-master \
-    && pytest && /opt/conda/bin/python ~/ImageClassifier/bachelors-master/CNN/test/run_tests.py \
-    && /opt/conda/bin/python ~/ImageClassifier/bachelors-master/CNN/build.py
+RUN cd ~/bachelors \
+    && pytest && /opt/conda/bin/python ~/bachelors/CNN/test/run_tests.py \
+    && /opt/conda/bin/python ~/bachelors/CNN/build.py
     
-RUN cd ~/ImageClassifier/bachelors-master/ScrapperScript \
+RUN cd ~/bachelors/ScrapperScript \
     && echo '13474752-7f4d5ee19e3fdf0354dae6977\nyellow+flower' | /opt/conda/bin/python ScrapperScript.py \
-    && cd ~/ImageClassifier/bachelors-master/PrepareSamples \
+    && cd ~/bachelors/PrepareSamples \
     && /opt/conda/bin/python PrepareSamples.py
 
-ADD . /root/ImageClassifier/bachelors-master/user_dir
-WORKDIR /root/ImageClassifier/bachelors-master
-ENTRYPOINT echo "Classification has been started" \
-     && /bin/bash run_all_classifications.sh
+ADD user_photos/ /root/bachelors/user_photos/
+WORKDIR /root/bachelors
+ENTRYPOINT /bin/bash run_all_classifications.sh
