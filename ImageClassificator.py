@@ -37,7 +37,8 @@ schema_string = """
               "^(option|help|required|action|nargs|const|default|type|choices|metavar|dest)": {
 
               }
-            }
+            },
+            "additionalProperties": false
           }
         }
       },
